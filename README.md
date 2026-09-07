@@ -75,6 +75,26 @@ To draw a file:
 </svg>
 ```
 
+## Numbers to draw on these shapes
+
+The identifiers on each shape are the ones official statistics are keyed
+by, and two companion repositories hold the statistics and keep them
+current:
+
+| Where | What it holds | What it is for |
+| --- | --- | --- |
+| **This repository** | the shapes, each with its ISTAT, NUTS and ISO identifiers | drawing a table of numbers on a map |
+| [**Gramscii-IT/open-data-catalogue**](https://huggingface.co/datasets/Gramscii-IT/open-data-catalogue) on Hugging Face | a catalogue of 15,990 open datasets from ISTAT, Eurostat, OECD, ILO and Italian public-finance sources: what each dataset is, its dimensions and codes, the words for the codes, its notes and a searchable document per dataset and language | finding the dataset that answers a question, and the codes it is cut by |
+| [**Gramscii-Git/open-data-catalogue**](https://github.com/Gramscii-Git/open-data-catalogue) on GitHub | the script that keeps that catalogue current | asking the providers for what moved and publishing the archive again |
+
+A dataset in the catalogue is cut by a territorial dimension whose codes
+are aliases of the shapes here: ISTAT's `REF_AREA` code `ITE4` is Lazio
+in `italy-regions.geo.json`, Eurostat's `geo` code `IT` is Italy in
+`europe.geo.json`, OECD's and ILO's `REF_AREA` code `AFG` is Afghanistan
+in `world.geo.json`, and the ISTAT municipality codes of the Italian
+public-finance sources land on `italy-municipalities.geo.json`. A row of
+that dataset colours its shape with no lookup table in between.
+
 ## How the files were made
 
 ### Italy
