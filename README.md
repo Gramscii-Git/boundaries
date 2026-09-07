@@ -1,20 +1,24 @@
 # Boundaries
 
-Ready-to-draw administrative boundaries for Italy and for the countries
-of Europe and the world, as SVG paths in plain JSON. Every shape carries
-the identifiers statistical providers use for that place, so a table of
+Ready-to-draw administrative and statistical boundaries for Italy and
+for Europe, as SVG paths in plain JSON. Every shape carries the
+identifiers statistical providers use for that place, so a table of
 numbers keyed by ISTAT code, NUTS code, licence plate or ISO code can be
 coloured on a map without a lookup step.
 
-Five files, 8,264 shapes, 2.0 MB in total. No runtime, no dependencies:
+Nine files, 10,001 shapes, 4.1 MB in total. No runtime, no dependencies:
 a file is a JSON document a browser can draw with one `<svg>` element.
 
 | File | Shapes | Level | Identifiers on each shape | Source | Licence |
 | --- | ---: | --- | --- | --- | --- |
-| `italy-regions.geo.json` | 22 | Italian regions, plus the autonomous provinces of Trento and Bolzano | ISTAT region code (`03`), NUTS 2 code (`ITC4`), upper-case name (`LOMBARDIA`) | ISTAT, 1 January 2026 | CC BY 4.0 |
-| `italy-provinces.geo.json` | 110 | Italian provinces and metropolitan cities | ISTAT province code (`015`), NUTS 3 code (`ITC4C`), licence plate (`MI`) | ISTAT, 1 January 2026 | CC BY 4.0 |
-| `italy-municipalities.geo.json` | 7,896 | Italian municipalities | ISTAT municipality code (`015146`); 377 municipalities also carry the code they had under an earlier provincial layout | ISTAT, 1 January 2026 | CC BY 4.0 |
-| `europe.geo.json` | 59 | Countries of Europe and its margins | ISO 3166-1 alpha-2 (`DE`), alpha-3 (`DEU`), and the Eurostat code where it differs (`EL`, `UK`) | Natural Earth, 1:50m | Public domain |
+| `italy-macro-areas.geo.json` | 5 | Italian macro-areas (ripartizioni, NUTS 1) | ripartizione number (`2`), the NUTS 1 code ISTAT publishes under (`ITD`) and the NUTS 2024 code (`ITH`) | ISTAT, 1 January 2026 | CC BY 4.0 |
+| `italy-regions.geo.json` | 22 | Italian regions (NUTS 2), plus the autonomous provinces of Trento and Bolzano and Trentino-Alto Adige as a whole | ISTAT region code (`05`), NUTS 2 code in both vintages (`ITD3`, `ITH3`), name as written and in upper case (`Veneto`, `VENETO`) | ISTAT, 1 January 2026 | CC BY 4.0 |
+| `italy-provinces.geo.json` | 110 | Italian provinces and metropolitan cities (NUTS 3) | ISTAT province code (`015`), NUTS 3 code (`ITC4C`), licence plate (`MI`) | ISTAT, 1 January 2026 | CC BY 4.0 |
+| `italy-municipalities.geo.json` | 7,896 | Italian municipalities (LAU) | ISTAT municipality code (`015146`); 377 municipalities also carry the code they had under an earlier provincial layout | ISTAT, 1 January 2026 | CC BY 4.0 |
+| `europe-nuts1.geo.json` | 111 | NUTS 1 regions of Europe | NUTS 2024 code (`DE2`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
+| `europe-nuts2.geo.json` | 291 | NUTS 2 regions of Europe | NUTS 2024 code (`ES51`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
+| `europe-nuts3.geo.json` | 1,330 | NUTS 3 regions of Europe | NUTS 2024 code (`FR101`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
+| `europe.geo.json` | 59 | Countries of Europe and its margins (NUTS 0) | ISO 3166-1 alpha-2 (`DE`), alpha-3 (`DEU`), and the Eurostat code where it differs (`EL`, `UK`) | Natural Earth, 1:50m | Public domain |
 | `world.geo.json` | 177 | Countries of the world | ISO 3166-1 alpha-2, alpha-3, and the Eurostat code where it differs | Natural Earth, 1:50m | Public domain |
 
 The shapes carry no population, area, postal code or cadastral code.
@@ -30,20 +34,25 @@ Each file is one JSON object:
   "viewBox": "0 0 1000 1288.1",
   "source": "ISTAT, Confini delle unità amministrative a fini statistici, 1 gennaio 2026 (generalizzati), CC BY 4.0",
   "shapes": [
-    { "name": "Piemonte", "aliases": ["01", "ITC1", "PIEMONTE"], "d": "M319.8,52.4L…Z" }
+    { "name": "Veneto", "aliases": ["05", "Veneto", "VENETO", "ITD3", "ITH3"], "d": "M600.2,131.4L…Z" }
   ]
 }
 ```
 
 - `viewBox` is the SVG view box every path in the file is drawn into.
-  The three Italian files share one view box and one projection, so a
-  region, a province and a municipality drawn together line up.
+  The four Italian files share one view box and one projection, and so
+  do the three European NUTS files, so levels of one country drawn
+  together line up.
 - `source` names the upstream dataset and its licence, so a file copied
   on its own still says where it came from.
 - `shapes[].name` is the official name of the place.
 - `shapes[].aliases` are the identifiers the place is known by. Match a
   row of data against any of them.
 - `shapes[].d` is the SVG path, already projected and simplified.
+- The three European NUTS files also carry `outside`: the codes of the
+  regions the file does not draw because they lie outside its frame
+  (the Canaries, Madeira, the Azores, the French overseas regions,
+  Svalbard).
 
 To draw a file:
 
@@ -58,22 +67,48 @@ To draw a file:
 ### Italy
 
 Source: ISTAT, *Confini delle unità amministrative a fini statistici al
-1° gennaio 2026*, the generalised release (`Limiti01012026_g`), read from
-the shapefiles `Reg01012026_g`, `ProvCM01012026_g` and `Com01012026_g`.
-The coordinates in that release are UTM zone 32N eastings and northings.
+1° gennaio 2026*, the generalised release `Limiti01012026_g.zip`
+(SHA-256 `b011a590656c3a3ebc297fba80726a376aa843b6f164641cf6a4a990021a81d6`,
+as served by ISTAT on 7 September 2026), read from the shapefiles
+`RipGeo01012026_g`, `Reg01012026_g`, `ProvCM01012026_g` and
+`Com01012026_g`. The coordinates in that release are UTM zone 32N
+eastings and northings.
 
 1. One transform is computed from Italy's own bounding box and applied to
-   all three levels: the country is drawn 1,000 units wide, the height
+   all four levels: the country is drawn 1,000 units wide, the height
    follows from its shape, nothing is stretched.
 2. Each polygon is simplified with topology preserved, with a tolerance
-   of 250 metres for regions and provinces and 500 metres for
-   municipalities. At this width one unit is about one kilometre, so a
-   boundary moves by less than a pixel.
+   of 250 metres for macro-areas, regions and provinces and 500 metres
+   for municipalities. At this width one unit is about one kilometre, so
+   a boundary moves by less than a pixel.
 3. Each polygon is written as an SVG path with one decimal of precision.
-4. Identifiers are attached from ISTAT's own classification: region,
-   province and municipality codes, NUTS codes, licence plates, and for
-   municipalities the codes they carried under an earlier provincial
-   layout, so data keyed by either vintage lands on the same shape.
+4. Identifiers are attached from ISTAT's own classification: ripartizione,
+   region, province and municipality codes, NUTS codes, licence plates,
+   and for municipalities the codes they carried under an earlier
+   provincial layout, so data keyed by either vintage lands on the same
+   shape. NUTS 2010 renamed Italy's `ITD` to `ITH` and `ITE` to `ITI`;
+   ISTAT still publishes under the old letters and Eurostat under the
+   new, so macro-areas and regions carry both.
+
+### European NUTS regions
+
+Source: Eurostat GISCO, *NUTS 2024*, region polygons at 1:3 million in
+EPSG:3035, file `NUTS_RG_03M_2024_3035.geojson` (SHA-256
+`b6c44e3ed6c1d8e33b98ba36fe8236f3c4b2bdc005049bb37320574be1601e33`).
+
+1. One frame is fixed around the continent, from the Atlantic coast of
+   Portugal to Cyprus and from Crete to the North Cape (EPSG:3035
+   x 2,600–7,350 km, y 1,350–5,500 km), and applied to all three levels:
+   the frame is drawn 1,000 units wide.
+2. Each polygon is clipped to the frame. A region lying wholly outside
+   it is not drawn and its code is listed under `outside`; Svalbard, off
+   the top of Norway, is cut away.
+3. Each polygon is simplified with topology preserved, with a tolerance
+   of 1,500 metres for NUTS 1 and 2 and 1,000 metres for NUTS 3. At this
+   width one unit is about 4.75 kilometres, so a boundary moves by less
+   than a third of a pixel.
+4. Each polygon is written as an SVG path with one decimal of precision,
+   named by its Latin name and identified by its NUTS 2024 code.
 
 ### Europe and the world
 
@@ -99,9 +134,13 @@ repository, not the upstream archives.
 
 | File | SHA-256 |
 | --- | --- |
-| `italy-regions.geo.json` | `44575f58980d226aa5ab3bec7b9daad24344462d5c3f5a0052485a17f4290601` |
+| `italy-macro-areas.geo.json` | `7a7cd481b2860b8a7c232d192fdd55fa86ebb75b6a9552f568059bf49c7d4b9f` |
+| `italy-regions.geo.json` | `7963e74dc142126cc2807bef0be26d4117031851a08622fae9dd04c267f8ef26` |
 | `italy-provinces.geo.json` | `292b3a4bd42844846519e8271466d23e96cf207861cad858e1c238da416ca798` |
 | `italy-municipalities.geo.json` | `c0759f670a54920772b2cafd1541717e34c17b2a44cb970d0a7f05a502673420` |
+| `europe-nuts1.geo.json` | `25ced35220f9d1dc5ef3573f6e9989b6de7859472d311fbac9b5e7bfa2a90539` |
+| `europe-nuts2.geo.json` | `6cf445662590b8ca7c17ff3394c1d7f3ae3febb32fa28eea6cedec236fc45eac` |
+| `europe-nuts3.geo.json` | `6f0c585c165fc4aa01651f51c3c20e1d86de1a042df240f81f9c6ff2226675da` |
 | `europe.geo.json` | `a4f787145ac330c17426ec734d3784d0d13665e2fdf98ab76fc8b976572492d3` |
 | `world.geo.json` | `13d478295fa33bb49531878f637188559b570c3b673df6f8b1b458e7f444af62` |
 
@@ -111,30 +150,44 @@ shasum -a 256 -c SHA256SUMS
 
 ## Licences
 
-Every file in this repository is released by Gramscii under the
-[Creative Commons Attribution 4.0 International](LICENSE)
-licence. You may copy, redistribute, adapt and use the files for any
-purpose, including commercially, as long as you give credit.
+Each file carries the terms of the dataset it was adapted from, and
+those terms are not the same for every file. Read the row of the table
+above for the file you use; the details are here.
 
-Each file also carries the terms of the dataset it was adapted from,
-which do not change under this release:
+**Gramscii's adaptation** (projection, simplification, SVG paths and the
+identifiers attached to each shape) is released for every file under the
+[Creative Commons Attribution 4.0 International](LICENSE) licence. That
+licence covers what Gramscii added, never the source data beneath it:
+where the source is more restrictive, the source's terms decide what you
+may do with the file.
 
-- `italy-regions.geo.json`, `italy-provinces.geo.json`,
-  `italy-municipalities.geo.json` are adapted from ISTAT data published
-  under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The
-  attribution ISTAT asks for is:
+**ISTAT files** (`italy-macro-areas`, `italy-regions`, `italy-provinces`,
+`italy-municipalities`) are adapted from data ISTAT publishes under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). You may use
+them for any purpose, including commercially, with this attribution:
 
-  > ISTAT, Confini delle unità amministrative a fini statistici,
-  > 1 gennaio 2026 (generalizzati), CC BY 4.0
+> ISTAT, Confini delle unità amministrative a fini statistici,
+> 1 gennaio 2026 (generalizzati), CC BY 4.0
 
-  ISTAT's open-data terms: <https://www.istat.it/dati/open-data/>.
+ISTAT's open-data terms: <https://www.istat.it/dati/open-data/>.
 
-- `europe.geo.json` and `world.geo.json` are adapted from Natural Earth
-  data, which its authors place in the
-  [public domain](NATURAL-EARTH.md). No attribution is required
-  by the source; Natural Earth welcomes it.
+**Eurostat GISCO files** (`europe-nuts1`, `europe-nuts2`, `europe-nuts3`)
+are adapted from data Eurostat distributes under its own
+[terms](GISCO-NUTS.md): non-commercial use only, with this copyright
+notice visible on any printed or electronic publication using the data:
 
-When you use a file, credit both the file's source, as written in its
+> © EuroGeographics for the administrative boundaries
+
+Commercial use of these three files needs a licence from
+[EuroGeographics](https://eurogeographics.org/). Gramscii's CC BY 4.0 on
+its adaptation does not lift that condition.
+
+**Natural Earth files** (`europe`, `world`) are adapted from data its
+authors place in the [public domain](NATURAL-EARTH.md). You may use them
+for any purpose; no attribution is required by the source, and Natural
+Earth welcomes it.
+
+When you use a file, credit the file's source, as written in its
 `source` field, and this repository:
 
 > Boundaries by Gramscii, CC BY 4.0, https://github.com/Gramscii-Git/boundaries
@@ -142,7 +195,7 @@ When you use a file, credit both the file's source, as written in its
 ## Origin
 
 These files are the map layer of Semantic Deterministic Graph,
-Gramscii's deterministic answer engine, and are published here on their own so
-that anyone drawing Italian or European statistics can use them. The
-copies inside that project and the files here are byte-identical: the
-digests above are the proof.
+Gramscii's deterministic answer engine, and are published here on their
+own so that anyone drawing Italian or European statistics can use them.
+The copies inside that project and the files here are byte-identical:
+the digests above are the proof.
