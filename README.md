@@ -25,6 +25,19 @@ The shapes carry no population, area, postal code or cadastral code.
 They are simplified for drawing at screen resolution and are not
 suitable for measuring areas, distances or legal boundaries.
 
+## Preview
+
+Each file drawn as it is, one colour per shape, from the `preview/`
+directory.
+
+| | |
+| --- | --- |
+| **italy-macro-areas** ![Italian macro-areas](preview/italy-macro-areas.png) | **italy-regions** ![Italian regions](preview/italy-regions.png) |
+| **italy-provinces** ![Italian provinces](preview/italy-provinces.png) | **italy-municipalities** ![Italian municipalities](preview/italy-municipalities.png) |
+| **europe-nuts1** ![NUTS 1 regions of Europe](preview/europe-nuts1.png) | **europe-nuts2** ![NUTS 2 regions of Europe](preview/europe-nuts2.png) |
+| **europe-nuts3** ![NUTS 3 regions of Europe](preview/europe-nuts3.png) | **europe** ![Countries of Europe](preview/europe.png) |
+| **world** ![Countries of the world](preview/world.png) | |
+
 ## Format
 
 Each file is one JSON object:
