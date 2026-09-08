@@ -2,9 +2,9 @@
 
 Ready-to-draw administrative and statistical boundaries for Italy and
 for Europe, as SVG paths in plain JSON. Every shape carries the
-identifiers statistical providers use for that place, so a table of
-numbers keyed by ISTAT code, NUTS code, licence plate or ISO code can be
-coloured on a map without a lookup step.
+identifiers statistical providers use for that place. Tables keyed by
+matching ISTAT, NUTS, licence-plate or ISO codes can be joined directly
+after checking their territorial level and classification vintage.
 
 Nine files, 10,001 shapes, 4.1 MB in total. No runtime, no dependencies:
 a file is a JSON document a browser can draw with one `<svg>` element.
@@ -60,7 +60,8 @@ Each file is one JSON object:
   on its own still says where it came from.
 - `shapes[].name` is the official name of the place.
 - `shapes[].aliases` are the identifiers the place is known by. Match a
-  row of data against any of them.
+  row of data against any of them within the selected boundary file.
+  An alias is not a crosswalk between arbitrary territorial vintages.
 - `shapes[].d` is the SVG path, already projected and simplified.
 - The three European NUTS files also carry `outside`: the codes of the
   regions the file does not draw because they lie outside its frame
@@ -77,15 +78,15 @@ To draw a file:
 
 ## Numbers to draw on these shapes
 
-The identifiers on each shape are the ones official statistics are keyed
-by, and two companion repositories hold the statistics and keep them
-current:
+The identifiers support joins with official statistics. The companion
+repositories provide discovery metadata and its publishing code, not the
+numeric observations:
 
 | Where | What it holds | What it is for |
 | --- | --- | --- |
 | **This repository** | the shapes, each with its ISTAT, NUTS and ISO identifiers | drawing a table of numbers on a map |
-| [**Gramscii-IT/open-data-catalogue**](https://huggingface.co/datasets/Gramscii-IT/open-data-catalogue) on Hugging Face | a catalogue of 15,990 open datasets from ISTAT, Eurostat, OECD, ILO and Italian public-finance sources: what each dataset is, its dimensions and codes, the words for the codes, its notes and a searchable document per dataset and language | finding the dataset that answers a question, and the codes it is cut by |
-| [**Gramscii-Git/open-data-catalogue**](https://github.com/Gramscii-Git/open-data-catalogue) on GitHub | the script that keeps that catalogue current | asking the providers for what moved and publishing the archive again |
+| [**Gramscii-IT/open-data-catalogue**](https://huggingface.co/datasets/Gramscii-IT/open-data-catalogue) on Hugging Face | discovery metadata from statistical and Italian public-finance providers; release counts and coverage belong to the snapshot manifest and quality report | finding datasets and inspecting their recorded dimensions, codes and documentation |
+| [**Gramscii-Git/open-data-catalogue**](https://github.com/Gramscii-Git/open-data-catalogue) on GitHub | catalogue release policy, validation and publication code | validating an export from the SDG harvester and publishing a verified immutable revision |
 
 A dataset in the catalogue is cut by a territorial dimension whose codes
 are aliases of the shapes here: ISTAT's `REF_AREA` code `ITE4` is Lazio
@@ -93,7 +94,34 @@ in `italy-regions.geo.json`, Eurostat's `geo` code `IT` is Italy in
 `europe.geo.json`, OECD's and ILO's `REF_AREA` code `AFG` is Afghanistan
 in `world.geo.json`, and the ISTAT municipality codes of the Italian
 public-finance sources land on `italy-municipalities.geo.json`. A row of
-that dataset colours its shape with no lookup table in between.
+that dataset can colour a matching shape. These examples do not establish
+coverage of every dataset or territorial vintage.
+
+### Selection and map joins
+
+This repository contains geometry, not a list of available observations.
+A shape does not prove that a provider has data for a particular date,
+territory or filter. The shared joint-availability artifact belongs in
+`open-data-catalogue`; its publisher documentation states which stages
+are implemented. Do not infer that an index has been published from the
+presence of these boundary files.
+
+Before drawing observations:
+
+- Verify the selected file's SHA-256 at a pinned repository revision.
+- Check the territorial level and vintage against the source dataset.
+  Historical aliases do not account for arbitrary mergers, splits or
+  changes of area.
+- Use one dataset, period, measure, unit and filter combination per map.
+  Treat multiple rows or codes mapping to the same shape as an explicit
+  ambiguity, not permission to overwrite a value or invent an aggregate.
+- Keep missing or suppressed values distinct from numeric zero. Report
+  unmatched codes and regions listed in `outside` separately from places
+  with no observation.
+
+Adding selection metadata or updating numeric observations does not
+require regenerating geometry. A boundary update requires a qualified
+source release and new checksums.
 
 ## How the files were made
 
