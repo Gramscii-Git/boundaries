@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "sources": {
+    "2018": {
+      "file": "2018.zip",
+      "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012018_g.zip",
+      "sha256": "1e85d7785b0a2a5f4a6bee3e0b3ea0b7878c7e7c0461cff79d9fd9d15686aecb"
+    },
+    "2019": {
+      "file": "2019.zip",
+      "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012019_g.zip",
+      "sha256": "2ddf23ed41aacf7ddf18a20a446ed0fd8ffba89da2673357eb750fd3ddbf634d"
+    },
+    "2020": {
+      "file": "2020.zip",
+      "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012020_g.zip",
+      "sha256": "4046cace3d9a5bb9a444d9a1f74338c55b16533d55769da37cde7dd7d022f7cd"
+    },
+    "2021": {
+      "file": "2021.zip",
+      "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti2021_g.zip",
+      "sha256": "b97497688220de1781890271f394c82034c84788778e157399cde93e957dec42"
+    },
+    "2026": {
+      "file": "2026.zip",
+      "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/2026/Limiti01012026_g.zip",
+      "sha256": "b011a590656c3a3ebc297fba80726a376aa843b6f164641cf6a4a990021a81d6"
+    },
+    "municipalities-2018": {
+      "file": "municipalities-2018.json",
+      "url": "https://situas-servizi.istat.it/publish/reportspooljson?pfun=74&pdata=31%2F12%2F2018",
+      "sha256": "dbb2eb7851db4926124db64176c9589116b439f78e640df357e8486028bfaf31"
+    },
+    "municipalities-2019": {
+      "file": "municipalities-2019.json",
+      "url": "https://situas-servizi.istat.it/publish/reportspooljson?pfun=74&pdata=31%2F12%2F2019",
+      "sha256": "1374ef0e7df7da28bb62e145d032f61ae31e812f1bf6b4dfa6adaf560c43e5eb"
+    },
+    "municipalities-2021": {
+      "file": "municipalities-2021.json",
+      "url": "https://situas-servizi.istat.it/publish/reportspooljson?pfun=74&pdata=31%2F12%2F2021",
+      "sha256": "1566ee37fa4dba0455b85550e34b92868c3cd274cd08d7753297cebd26920d1d"
+    }
+  },
+  "geometries": {
+    "2018": {
+      "source": "2018",
+      "member": "Limiti01012018_g/Com01012018_g/Com01012018_g_WGS84",
+      "code_field": "PRO_COM_T",
+      "encoding": "utf-8",
+      "projection_sha256": "10a2674d7bc43a70df19daf98d0b1deb3f5222f03659e1b4d82b395c20177cb9",
+      "reference_date": "2018-01-01"
+    },
+    "2019": {
+      "source": "2019",
+      "member": "Limiti01012019_g/Com01012019_g/Com01012019_g_WGS84",
+      "code_field": "PRO_COM_T",
+      "encoding": "utf-8",
+      "projection_sha256": "10a2674d7bc43a70df19daf98d0b1deb3f5222f03659e1b4d82b395c20177cb9",
+      "reference_date": "2019-01-01"
+    },
+    "2020": {
+      "source": "2020",
+      "member": "Limiti01012020_g/Com01012020_g/Com01012020_g_WGS84",
+      "code_field": "PRO_COM_T",
+      "encoding": "utf-8",
+      "projection_sha256": "10a2674d7bc43a70df19daf98d0b1deb3f5222f03659e1b4d82b395c20177cb9",
+      "reference_date": "2020-01-01"
+    },
+    "2021": {
+      "source": "2021",
+      "member": "Limiti2021_g/Com2021_g/Com2021_g",
+      "code_field": "PRO_COM_T",
+      "encoding": "utf-8",
+      "projection_sha256": "10a2674d7bc43a70df19daf98d0b1deb3f5222f03659e1b4d82b395c20177cb9",
+      "reference_date": "2021-12-31"
+    }
+  },
+  "inventories": {
+    "2018": {
+      "source": "municipalities-2018",
+      "rows_field": "resultset",
+      "code_field": "PRO_COM_T",
+      "name_field": "COMUNE",
+      "reference_date": "2018-12-31",
+      "rows": 7954
+    },
+    "2019": {
+      "source": "municipalities-2019",
+      "rows_field": "resultset",
+      "code_field": "PRO_COM_T",
+      "name_field": "COMUNE",
+      "reference_date": "2019-12-31",
+      "rows": 7914
+    },
+    "2021": {
+      "source": "municipalities-2021",
+      "rows_field": "resultset",
+      "code_field": "PRO_COM_T",
+      "name_field": "COMUNE",
+      "reference_date": "2021-12-31",
+      "rows": 7904
+    }
+  },
+  "frame": {
+    "source": "2026",
+    "member": "Reg01012026_g/Reg01012026_g_WGS84",
+    "projection_sha256": "10a2674d7bc43a70df19daf98d0b1deb3f5222f03659e1b4d82b395c20177cb9"
+  },
+  "canvas_width": 1000,
+  "tolerance_metres": 500,
+  "precision": 1,
+  "code_pattern": "[0-9]{6}",
+  "outputs": [
+    {
+      "file": "italy-municipalities-2018.geo.json",
+      "inventory": "2018",
+      "base": "2018",
+      "additions": [
+        {
+          "geometry": "2019",
+          "codes": [
+            "016215",
+            "024124",
+            "028107",
+            "030190",
+            "030191",
+            "078157"
+          ]
+        }
+      ],
+      "attribution": "ISTAT SITUAS, municipalities active on 31 December 2018; ISTAT generalised boundary releases 2018, 2019, CC BY 4.0. Each shape records its boundary date."
+    },
+    {
+      "file": "italy-municipalities-2019.geo.json",
+      "inventory": "2019",
+      "base": "2019",
+      "additions": [
+        {
+          "geometry": "2020",
+          "codes": [
+            "006193",
+            "012143",
+            "015251",
+            "024125",
+            "024126",
+            "024127",
+            "025074",
+            "026096",
+            "075098"
+          ]
+        }
+      ],
+      "attribution": "ISTAT SITUAS, municipalities active on 31 December 2019; ISTAT generalised boundary releases 2019, 2020, CC BY 4.0. Each shape records its boundary date."
+    },
+    {
+      "file": "italy-municipalities-2021.geo.json",
+      "inventory": "2021",
+      "base": "2021",
+      "additions": [],
+      "attribution": "ISTAT SITUAS, municipalities active on 31 December 2021; ISTAT generalised boundary releases 2021, CC BY 4.0. Each shape records its boundary date."
+    }
+  ]
+}
