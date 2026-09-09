@@ -6,7 +6,7 @@ identifiers statistical providers use for that place. Tables keyed by
 matching ISTAT, NUTS, licence-plate or ISO codes can be joined directly
 after checking their territorial level and classification vintage.
 
-Nine files, 10,001 shapes, 4.1 MB in total. No runtime, no dependencies:
+Twelve files, 33,773 shapes, 9.4 MB in total. No runtime, no dependencies:
 a file is a JSON document a browser can draw with one `<svg>` element.
 
 | File | Shapes | Level | Identifiers on each shape | Source | Licence |
@@ -15,6 +15,9 @@ a file is a JSON document a browser can draw with one `<svg>` element.
 | `italy-regions.geo.json` | 22 | Italian regions (NUTS 2), plus the autonomous provinces of Trento and Bolzano and Trentino-Alto Adige as a whole | ISTAT region code (`05`), NUTS 2 code in both vintages (`ITD3`, `ITH3`), name as written and in upper case (`Veneto`, `VENETO`) | ISTAT, 1 January 2026 | CC BY 4.0 |
 | `italy-provinces.geo.json` | 110 | Italian provinces and metropolitan cities (NUTS 3) | ISTAT province code (`015`), NUTS 3 code (`ITC4C`), licence plate (`MI`) | ISTAT, 1 January 2026 | CC BY 4.0 |
 | `italy-municipalities.geo.json` | 7,896 | Italian municipalities (LAU) | ISTAT municipality code (`015146`); 377 municipalities also carry the code they had under an earlier provincial layout | ISTAT, 1 January 2026 | CC BY 4.0 |
+| `italy-municipalities-2018.geo.json` | 7,954 | Municipalities active at the end of 2018 | ISTAT municipality code | ISTAT SITUAS inventory; 2018 and 2019 boundary releases | CC BY 4.0 |
+| `italy-municipalities-2019.geo.json` | 7,914 | Municipalities active at the end of 2019 | ISTAT municipality code | ISTAT SITUAS inventory; 2019 and 2020 boundary releases | CC BY 4.0 |
+| `italy-municipalities-2021.geo.json` | 7,904 | Municipalities active at the end of 2021 | ISTAT municipality code | ISTAT SITUAS inventory; 31 December 2021 boundaries | CC BY 4.0 |
 | `europe-nuts1.geo.json` | 111 | NUTS 1 regions of Europe | NUTS 2024 code (`DE2`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
 | `europe-nuts2.geo.json` | 291 | NUTS 2 regions of Europe | NUTS 2024 code (`ES51`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
 | `europe-nuts3.geo.json` | 1,330 | NUTS 3 regions of Europe | NUTS 2024 code (`FR101`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
@@ -27,7 +30,7 @@ suitable for measuring areas, distances or legal boundaries.
 
 ## Preview
 
-Each file drawn as it is, one colour per shape, from the `preview/`
+The current territorial levels drawn as they are, one colour per shape, from the `preview/`
 directory.
 
 | | |
@@ -53,7 +56,7 @@ Each file is one JSON object:
 ```
 
 - `viewBox` is the SVG view box every path in the file is drawn into.
-  The four Italian files share one view box and one projection, and so
+  The seven Italian files share one view box and one projection, and so
   do the three European NUTS files, so levels of one country drawn
   together line up.
 - `source` names the upstream dataset and its licence, so a file copied
@@ -63,6 +66,10 @@ Each file is one JSON object:
   row of data against any of them within the selected boundary file.
   An alias is not a crosswalk between arbitrary territorial vintages.
 - `shapes[].d` is the SVG path, already projected and simplified.
+- Historical municipality files also carry `reference_date`, the date of the
+  official active-municipality inventory, and `shapes[].boundary_date`, the
+  boundary release used for that individual shape. These dates serve different
+  purposes; a file does not claim a uniform boundary date when releases differ.
 - The three European NUTS files also carry `outside`: the codes of the
   regions the file does not draw because they lie outside its frame
   (the Canaries, Madeira, the Azores, the French overseas regions,
@@ -93,7 +100,7 @@ are aliases of the shapes here: ISTAT's `REF_AREA` code `ITE4` is Lazio
 in `italy-regions.geo.json`, Eurostat's `geo` code `IT` is Italy in
 `europe.geo.json`, OECD's and ILO's `REF_AREA` code `AFG` is Afghanistan
 in `world.geo.json`, and the ISTAT municipality codes of the Italian
-public-finance sources land on `italy-municipalities.geo.json`. A row of
+public-finance sources require the municipality file qualified for that dataset. A row of
 that dataset can colour a matching shape. These examples do not establish
 coverage of every dataset or territorial vintage.
 
@@ -151,6 +158,47 @@ eastings and northings.
    ISTAT still publishes under the old letters and Eurostat under the
    new, so macro-areas and regions carry both.
 
+### Historical municipalities
+
+[`municipalities.build.json`](municipalities.build.json) pins every input URL,
+SHA-256, shapefile member, projection and active-municipality inventory. The
+inventories are the official [ISTAT SITUAS](https://situas.istat.it/) reports for
+31 December 2018, 2019 and 2021. Names come from those inventories. Geometry
+comes from ISTAT's [generalised boundary releases](https://www.istat.it/notizia/confini-delle-unita-amministrative-a-fini-statistici-al-1-gennaio-2018-2/).
+
+The 2018 and 2019 base releases describe 1 January. Six municipalities formed
+during 2018 are explicitly assigned their geometry from the 2019 release; nine
+formed during 2019 use the 2020 release. Retired municipalities absent from the
+year-end inventory are excluded. The 2021 boundary release describes 31 December
+and needs no additional assignments. These are declared source assignments,
+never automatic substitution of a missing municipality with its successor.
+Every shape records its geometry's date. This proves identifier coverage, not
+the absence of any boundary adjustment within a year.
+
+For the verified OpenCivitas source captures, the 2018, 2019 and 2021 datasets
+use their corresponding files. The dataset named `opencivitas_fabbisogni` reports
+2022 values using newer merged municipality identifiers, so its qualified join
+uses `italy-municipalities.geo.json`. An observation year alone is insufficient
+to choose a file. [The coverage report](docs/municipality-coverage.md) records
+the full source-code checks.
+
+To reproduce the historical files, save each declared source under its configured
+`sources.*.file` name in `build/istat/`, then run:
+
+```sh
+uv sync --locked --group build
+.venv/bin/python scripts/municipalities.py --spec municipalities.build.json \
+  --inputs build/istat --output build/generated
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+The generator verifies all input checksums and projections before publishing
+outputs. An altered input, duplicate code, incomplete inventory join or undeclared
+addition fails the build. Source downloads are an explicit operator action;
+the generator never changes pinned inputs or chooses replacement releases.
+Generated build intermediates and downloaded source archives stay outside version
+control. Only reviewed distributable geometry belongs at the repository root.
+
 ### European NUTS regions
 
 Source: Eurostat GISCO, *NUTS 2024*, region polygons at 1:3 million in
@@ -199,6 +247,9 @@ repository, not the upstream archives.
 | `italy-regions.geo.json` | `7963e74dc142126cc2807bef0be26d4117031851a08622fae9dd04c267f8ef26` |
 | `italy-provinces.geo.json` | `292b3a4bd42844846519e8271466d23e96cf207861cad858e1c238da416ca798` |
 | `italy-municipalities.geo.json` | `c0759f670a54920772b2cafd1541717e34c17b2a44cb970d0a7f05a502673420` |
+| `italy-municipalities-2018.geo.json` | `90ede3e5e6533edc5d58a8bf868f3654ee66607b6f8ff0b03a2030b19e73ff30` |
+| `italy-municipalities-2019.geo.json` | `4a6ee6c0675da5a736426f217665fa9f85f2e8c8a7f1c0b37b2186f80d518bd6` |
+| `italy-municipalities-2021.geo.json` | `030f54e34fcf7b583a9863b46bfd1601c072499be24db1e7f9becb2daf093366` |
 | `europe-nuts1.geo.json` | `25ced35220f9d1dc5ef3573f6e9989b6de7859472d311fbac9b5e7bfa2a90539` |
 | `europe-nuts2.geo.json` | `6cf445662590b8ca7c17ff3394c1d7f3ae3febb32fa28eea6cedec236fc45eac` |
 | `europe-nuts3.geo.json` | `6f0c585c165fc4aa01651f51c3c20e1d86de1a042df240f81f9c6ff2226675da` |
@@ -223,7 +274,7 @@ where the source is more restrictive, the source's terms decide what you
 may do with the file.
 
 **ISTAT files** (`italy-macro-areas`, `italy-regions`, `italy-provinces`,
-`italy-municipalities`) are adapted from data ISTAT publishes under
+`italy-municipalities` and its historical files) are adapted from data ISTAT publishes under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). You may use
 them for any purpose, including commercially, with this attribution:
 
@@ -231,6 +282,8 @@ them for any purpose, including commercially, with this attribution:
 > 1 gennaio 2026 (generalizzati), CC BY 4.0
 
 ISTAT's open-data terms: <https://www.istat.it/dati/open-data/>.
+For historical files, use the attribution in their own `source` field, which
+identifies the SITUAS inventory date and the boundary releases used.
 
 **Eurostat GISCO files** (`europe-nuts1`, `europe-nuts2`, `europe-nuts3`)
 are adapted from data Eurostat distributes under its own

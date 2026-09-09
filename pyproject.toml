@@ -1,0 +1,8 @@
+[project]
+name = "gramscii-boundaries"
+version = "1.0.0"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+build = ["pyshp==3.1.6", "shapely==2.1.2"]
