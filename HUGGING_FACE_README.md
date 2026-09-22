@@ -9,10 +9,14 @@ tags:
 - boundaries
 - europe
 configs:
-- config_name: open
+- config_name: istat
   data_files:
   - split: train
-    path: data/open.jsonl.gz
+    path: data/istat.jsonl.gz
+- config_name: natural-earth
+  data_files:
+  - split: train
+    path: data/natural-earth.jsonl.gz
 - config_name: gisco-nuts-non-commercial
   data_files:
   - split: train
@@ -34,8 +38,11 @@ and SHA-256 digest.
 
 ## Configurations
 
-- `open` contains the ISTAT and Natural Earth adaptations. Their sources permit
-  commercial use under the terms recorded in `boundary-sets.json`.
+- `istat` contains the current and historical Italian administrative units.
+  ISTAT permits commercial use under CC BY 4.0 with attribution.
+- `natural-earth` contains country and separately coded territory map units.
+  Natural Earth's source data is in the public domain; Gramscii's adaptation is
+  CC BY 4.0.
 - `gisco-nuts-non-commercial` contains NUTS 2024 levels 1–3. Eurostat GISCO's
   source terms limit these files to non-commercial use and require the stated
   attribution. Commercial use requires a licence from EuroGeographics.

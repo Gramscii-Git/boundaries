@@ -40,6 +40,7 @@ class DistributionTests(unittest.TestCase):
                 body = json.loads((root / item["file"]).read_bytes())
                 self.assertIn(item["license"], licenses)
                 self.assertIsInstance(licenses[item["license"]]["commercial_use"], bool)
+                self.assertTrue(licenses[item["license"]]["viewer_config"])
                 self.assertEqual(item["shapes"], len(body["shapes"]))
                 self.assertEqual(
                     item["sha256"],

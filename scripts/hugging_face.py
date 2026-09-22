@@ -48,6 +48,8 @@ def _row(asset: dict, license_: dict, body: dict, shape: dict) -> dict:
 
 def build(root: Path, output: Path) -> dict:
     manifest = json.loads((root / "boundary-sets.json").read_bytes())
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("Hugging Face publication output directory is not empty")
     output.mkdir(parents=True, exist_ok=True)
     data = output / "data"
     data.mkdir(exist_ok=True)
@@ -55,7 +57,9 @@ def build(root: Path, output: Path) -> dict:
     for name in DOCUMENTS:
         shutil.copy2(root / name, output / name)
 
-    grouped: dict[str, list[dict]] = {"open": [], "gisco-nuts-non-commercial": []}
+    grouped: dict[str, list[dict]] = {
+        license_["viewer_config"]: [] for license_ in manifest["licenses"].values()
+    }
     for asset in manifest["boundary_sets"]:
         source = root / asset["file"]
         if _digest(source) != asset["sha256"]:
@@ -64,7 +68,7 @@ def build(root: Path, output: Path) -> dict:
         if len(body["shapes"]) != asset["shapes"]:
             raise ValueError(f"boundary asset shape count differs: {asset['file']}")
         license_ = manifest["licenses"][asset["license"]]
-        group = "open" if license_["commercial_use"] else "gisco-nuts-non-commercial"
+        group = license_["viewer_config"]
         grouped[group].extend(_row(asset, license_, body, shape) for shape in body["shapes"])
         shutil.copy2(source, output / asset["file"])
 

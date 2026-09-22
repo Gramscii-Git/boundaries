@@ -3,18 +3,21 @@
   "dataset_id": "Gramscii-IT/european-territory-boundaries",
   "licenses": {
     "istat-cc-by-4.0": {
+      "viewer_config": "istat",
       "source_license": "CC BY 4.0",
       "commercial_use": true,
       "terms": "https://www.istat.it/dati/open-data/",
       "attribution": "ISTAT, Confini delle unità amministrative a fini statistici, CC BY 4.0"
     },
     "natural-earth-public-domain": {
+      "viewer_config": "natural-earth",
       "source_license": "Public domain",
       "commercial_use": true,
       "terms": "https://www.naturalearthdata.com/about/terms-of-use/",
       "attribution": "Natural Earth; adaptation by Gramscii, CC BY 4.0"
     },
     "gisco-nuts-non-commercial": {
+      "viewer_config": "gisco-nuts-non-commercial",
       "source_license": "Eurostat GISCO NUTS terms",
       "commercial_use": false,
       "terms": "https://ec.europa.eu/eurostat/en/web/gisco/geodata/statistical-units",

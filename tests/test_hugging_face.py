@@ -10,6 +10,14 @@ from scripts.hugging_face import build
 
 
 class HuggingFaceTests(unittest.TestCase):
+    def test_build_rejects_stale_publication_files(self):
+        root = Path(__file__).parents[1]
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / "stale.jsonl").write_bytes(b"stale")
+            with self.assertRaisesRegex(ValueError, "not empty"):
+                build(root, output)
+
     def test_build_has_deterministic_complete_licence_separated_rows(self):
         root = Path(__file__).parents[1]
         with tempfile.TemporaryDirectory() as first, tempfile.TemporaryDirectory() as second:
@@ -20,13 +28,22 @@ class HuggingFaceTests(unittest.TestCase):
                 sum(item["rows"] for item in release["data_files"].values()),
                 33852,
             )
+            manifest = json.loads((root / "boundary-sets.json").read_bytes())
+            expected_commercial_use = {
+                license_["viewer_config"]: license_["commercial_use"]
+                for license_ in manifest["licenses"].values()
+            }
             for group, metadata in release["data_files"].items():
                 with gzip.open(Path(first) / metadata["file"], "rt", encoding="utf-8") as source:
                     rows = [json.loads(line) for line in source]
                 self.assertEqual(len(rows), metadata["rows"])
                 self.assertEqual(
                     {row["commercial_use"] for row in rows},
-                    {group == "open"},
+                    {expected_commercial_use[group]},
+                )
+                self.assertEqual(
+                    {manifest["licenses"][row["license_id"]]["viewer_config"] for row in rows},
+                    {group},
                 )
                 identities = {
                     (row["boundary_set_id"], alias)
