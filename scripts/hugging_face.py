@@ -84,9 +84,8 @@ def build(root: Path, output: Path) -> dict:
             "rows": len(rows),
             "sha256": _digest(target),
         }
-    (output / "publication.json").write_text(
-        json.dumps(release, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    (output / "publication.json").write_bytes(
+        (json.dumps(release, ensure_ascii=False, indent=2) + "\n").encode()
     )
     return release
 

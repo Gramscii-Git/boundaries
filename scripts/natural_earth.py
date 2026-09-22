@@ -168,9 +168,8 @@ def main() -> None:
         for output in spec["outputs"]:
             body = _build(rows, spec["source"], spec["identity"], output)
             target = args.output / output["file"]
-            target.write_text(
-                json.dumps(body, ensure_ascii=False, separators=(",", ":")) + "\n",
-                encoding="utf-8",
+            target.write_bytes(
+                (json.dumps(body, ensure_ascii=False, separators=(",", ":")) + "\n").encode()
             )
             print(f"{target.name}: {len(body['shapes'])} shapes")
 

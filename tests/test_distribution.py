@@ -7,6 +7,12 @@ from pathlib import Path
 
 
 class DistributionTests(unittest.TestCase):
+    def test_geometry_checkout_preserves_published_bytes_on_every_platform(self):
+        root = Path(__file__).parents[1]
+        attributes = (root / ".gitattributes").read_text(encoding="utf-8").splitlines()
+        self.assertIn("*.geo.json text eol=lf", attributes)
+        self.assertIn("SHA256SUMS text eol=lf", attributes)
+
     def test_checksums_cover_exactly_the_distributed_geometry_files(self):
         root = Path(__file__).parents[1]
         digests = {}
