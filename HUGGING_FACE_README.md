@@ -30,11 +30,24 @@ Semantic Deterministic Graph. The release contains 12 boundary sets and 33,852
 shapes. Every shape has provider-facing identifiers and an SVG path in the
 declared view box.
 
-The raw `*.geo.json` files are the canonical renderer assets. The two compressed
+The raw `*.geo.json` files are the canonical renderer assets. The three compressed
 JSONL files expose the same shapes as rows for the Hugging Face dataset viewer.
 `boundary-sets.json` records each set's territorial level, classification,
 vintage, identifier families, source terms, commercial-use status, shape count
 and SHA-256 digest.
+
+## Preview
+
+The current territorial levels are drawn directly from the canonical geometry
+assets, one colour per shape.
+
+| | |
+| --- | --- |
+| **italy-macro-areas** ![Italian macro-areas](preview/italy-macro-areas.png) | **italy-regions** ![Italian regions](preview/italy-regions.png) |
+| **italy-provinces** ![Italian provinces](preview/italy-provinces.png) | **italy-municipalities** ![Italian municipalities](preview/italy-municipalities.png) |
+| **europe-nuts1** ![NUTS 1 regions of Europe](preview/europe-nuts1.png) | **europe-nuts2** ![NUTS 2 regions of Europe](preview/europe-nuts2.png) |
+| **europe-nuts3** ![NUTS 3 regions of Europe](preview/europe-nuts3.png) | **europe** ![Countries and territories of Europe](preview/europe.png) |
+| **world** ![Countries and territories of the world](preview/world.png) | |
 
 ## Configurations
 

@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.hugging_face import build
+from scripts.hugging_face import PREVIEWS, build
 
 
 class HuggingFaceTests(unittest.TestCase):
@@ -24,6 +24,19 @@ class HuggingFaceTests(unittest.TestCase):
             release = build(root, Path(first))
             repeated = build(root, Path(second))
             self.assertEqual(release, repeated)
+            self.assertEqual(
+                {path.name for path in (Path(first) / "preview").glob("*.png")},
+                set(PREVIEWS),
+            )
+            for name in PREVIEWS:
+                self.assertEqual(
+                    (Path(first) / "preview" / name).read_bytes(),
+                    (root / "preview" / name).read_bytes(),
+                )
+                self.assertEqual(
+                    (Path(second) / "preview" / name).read_bytes(),
+                    (root / "preview" / name).read_bytes(),
+                )
             self.assertEqual(
                 sum(item["rows"] for item in release["data_files"].values()),
                 33852,

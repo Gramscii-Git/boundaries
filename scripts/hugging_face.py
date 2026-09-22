@@ -17,6 +17,17 @@ DOCUMENTS = (
     "boundary-sets.json",
     "natural-earth.build.json",
 )
+PREVIEWS = (
+    "europe-nuts1.png",
+    "europe-nuts2.png",
+    "europe-nuts3.png",
+    "europe.png",
+    "italy-macro-areas.png",
+    "italy-municipalities.png",
+    "italy-provinces.png",
+    "italy-regions.png",
+    "world.png",
+)
 
 
 def _digest(path: Path) -> str:
@@ -56,6 +67,10 @@ def build(root: Path, output: Path) -> dict:
     shutil.copy2(root / "HUGGING_FACE_README.md", output / "README.md")
     for name in DOCUMENTS:
         shutil.copy2(root / name, output / name)
+    previews = output / "preview"
+    previews.mkdir()
+    for name in PREVIEWS:
+        shutil.copy2(root / "preview" / name, previews / name)
 
     grouped: dict[str, list[dict]] = {
         license_["viewer_config"]: [] for license_ in manifest["licenses"].values()
