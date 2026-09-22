@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "dataset_id": "Gramscii-IT/european-territory-boundaries",
+  "licenses": {
+    "istat-cc-by-4.0": {
+      "source_license": "CC BY 4.0",
+      "commercial_use": true,
+      "terms": "https://www.istat.it/dati/open-data/",
+      "attribution": "ISTAT, Confini delle unità amministrative a fini statistici, CC BY 4.0"
+    },
+    "natural-earth-public-domain": {
+      "source_license": "Public domain",
+      "commercial_use": true,
+      "terms": "https://www.naturalearthdata.com/about/terms-of-use/",
+      "attribution": "Natural Earth; adaptation by Gramscii, CC BY 4.0"
+    },
+    "gisco-nuts-non-commercial": {
+      "source_license": "Eurostat GISCO NUTS terms",
+      "commercial_use": false,
+      "terms": "https://ec.europa.eu/eurostat/en/web/gisco/geodata/statistical-units",
+      "attribution": "Eurostat GISCO, NUTS 2024, 1:3M; administrative boundaries © EuroGeographics © UN-FAO © Turkstat"
+    }
+  },
+  "boundary_sets": [
+    {
+      "id": "italy-macro-areas-2026",
+      "file": "italy-macro-areas.geo.json",
+      "scope": "Italy",
+      "level": "macro-area",
+      "classification": "ISTAT administrative units with NUTS aliases",
+      "vintage": "2026-01-01",
+      "identifiers": ["ISTAT ripartizione", "NUTS 2010", "NUTS 2024"],
+      "license": "istat-cc-by-4.0",
+      "shapes": 5,
+      "sha256": "7a7cd481b2860b8a7c232d192fdd55fa86ebb75b6a9552f568059bf49c7d4b9f"
+    },
+    {
+      "id": "italy-regions-2026",
+      "file": "italy-regions.geo.json",
+      "scope": "Italy",
+      "level": "region",
+      "classification": "ISTAT administrative units with NUTS aliases",
+      "vintage": "2026-01-01",
+      "identifiers": ["ISTAT region", "NUTS 2010", "NUTS 2024"],
+      "license": "istat-cc-by-4.0",
+      "shapes": 22,
+      "sha256": "7963e74dc142126cc2807bef0be26d4117031851a08622fae9dd04c267f8ef26"
+    },
+    {
+      "id": "italy-provinces-2026",
+      "file": "italy-provinces.geo.json",
+      "scope": "Italy",
+      "level": "province",
+      "classification": "ISTAT administrative units",
+      "vintage": "2026-01-01",
+      "identifiers": ["ISTAT province", "NUTS 3", "vehicle registration code"],
+      "license": "istat-cc-by-4.0",
+      "shapes": 110,
+      "sha256": "292b3a4bd42844846519e8271466d23e96cf207861cad858e1c238da416ca798"
+    },
+    {
+      "id": "italy-municipalities-2026",
+      "file": "italy-municipalities.geo.json",
+      "scope": "Italy",
+      "level": "municipality",
+      "classification": "ISTAT administrative units",
+      "vintage": "2026-01-01",
+      "identifiers": ["ISTAT municipality"],
+      "license": "istat-cc-by-4.0",
+      "shapes": 7896,
+      "sha256": "c0759f670a54920772b2cafd1541717e34c17b2a44cb970d0a7f05a502673420"
+    },
+    {
+      "id": "italy-municipalities-2018",
+      "file": "italy-municipalities-2018.geo.json",
+      "scope": "Italy",
+      "level": "municipality",
+      "classification": "ISTAT SITUAS active municipalities",
+      "vintage": "2018-12-31",
+      "identifiers": ["ISTAT municipality"],
+      "license": "istat-cc-by-4.0",
+      "shapes": 7954,
+      "sha256": "90ede3e5e6533edc5d58a8bf868f3654ee66607b6f8ff0b03a2030b19e73ff30"
+    },
+    {
+      "id": "italy-municipalities-2019",
+      "file": "italy-municipalities-2019.geo.json",
+      "scope": "Italy",
+      "level": "municipality",
+      "classification": "ISTAT SITUAS active municipalities",
+      "vintage": "2019-12-31",
+      "identifiers": ["ISTAT municipality"],
+      "license": "istat-cc-by-4.0",
+      "shapes": 7914,
+      "sha256": "4a6ee6c0675da5a736426f217665fa9f85f2e8c8a7f1c0b37b2186f80d518bd6"
+    },
+    {
+      "id": "italy-municipalities-2021",
+      "file": "italy-municipalities-2021.geo.json",
+      "scope": "Italy",
+      "level": "municipality",
+      "classification": "ISTAT SITUAS active municipalities",
+      "vintage": "2021-12-31",
+      "identifiers": ["ISTAT municipality"],
+      "license": "istat-cc-by-4.0",
+      "shapes": 7904,
+      "sha256": "030f54e34fcf7b583a9863b46bfd1601c072499be24db1e7f9becb2daf093366"
+    },
+    {
+      "id": "europe-nuts1-2024",
+      "file": "europe-nuts1.geo.json",
+      "scope": "Europe",
+      "level": "nuts1",
+      "classification": "NUTS 2024",
+      "vintage": "2024",
+      "identifiers": ["NUTS 1"],
+      "license": "gisco-nuts-non-commercial",
+      "shapes": 111,
+      "sha256": "25ced35220f9d1dc5ef3573f6e9989b6de7859472d311fbac9b5e7bfa2a90539"
+    },
+    {
+      "id": "europe-nuts2-2024",
+      "file": "europe-nuts2.geo.json",
+      "scope": "Europe",
+      "level": "nuts2",
+      "classification": "NUTS 2024",
+      "vintage": "2024",
+      "identifiers": ["NUTS 2"],
+      "license": "gisco-nuts-non-commercial",
+      "shapes": 291,
+      "sha256": "6cf445662590b8ca7c17ff3394c1d7f3ae3febb32fa28eea6cedec236fc45eac"
+    },
+    {
+      "id": "europe-nuts3-2024",
+      "file": "europe-nuts3.geo.json",
+      "scope": "Europe",
+      "level": "nuts3",
+      "classification": "NUTS 2024",
+      "vintage": "2024",
+      "identifiers": ["NUTS 3"],
+      "license": "gisco-nuts-non-commercial",
+      "shapes": 1330,
+      "sha256": "6f0c585c165fc4aa01651f51c3c20e1d86de1a042df240f81f9c6ff2226675da"
+    },
+    {
+      "id": "europe-countries-natural-earth-5.1.1",
+      "file": "europe.geo.json",
+      "scope": "Europe",
+      "level": "country",
+      "classification": "Natural Earth Admin 0 Map Units",
+      "vintage": "5.1.1",
+      "identifiers": ["ISO 3166-1 alpha-2", "ISO 3166-1 alpha-3", "Eurostat country alias"],
+      "license": "natural-earth-public-domain",
+      "shapes": 68,
+      "sha256": "70cd83aa4832c9d195108cc4e2990f128052e24acb4967cb7c6691b695401d09"
+    },
+    {
+      "id": "world-map-units-natural-earth-5.1.1",
+      "file": "world.geo.json",
+      "scope": "World",
+      "level": "country-or-territory",
+      "classification": "Natural Earth Admin 0 Map Units",
+      "vintage": "5.1.1",
+      "identifiers": ["ISO 3166-1 alpha-2", "ISO 3166-1 alpha-3", "Eurostat country alias"],
+      "license": "natural-earth-public-domain",
+      "shapes": 247,
+      "sha256": "68b225b731701c87d9b6a1db334760ed89de092f1b8b87649bedb51ae8046132"
+    }
+  ]
+}

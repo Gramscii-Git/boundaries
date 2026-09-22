@@ -6,7 +6,7 @@ identifiers statistical providers use for that place. Tables keyed by
 matching ISTAT, NUTS, licence-plate or ISO codes can be joined directly
 after checking their territorial level and classification vintage.
 
-Twelve files, 33,773 shapes, 9.4 MB in total. No runtime, no dependencies:
+Twelve files, 33,852 shapes, 9.6 MB in total. No runtime, no dependencies:
 a file is a JSON document a browser can draw with one `<svg>` element.
 
 | File | Shapes | Level | Identifiers on each shape | Source | Licence |
@@ -21,8 +21,8 @@ a file is a JSON document a browser can draw with one `<svg>` element.
 | `europe-nuts1.geo.json` | 111 | NUTS 1 regions of Europe | NUTS 2024 code (`DE2`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
 | `europe-nuts2.geo.json` | 291 | NUTS 2 regions of Europe | NUTS 2024 code (`ES51`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
 | `europe-nuts3.geo.json` | 1,330 | NUTS 3 regions of Europe | NUTS 2024 code (`FR101`) | Eurostat GISCO, NUTS 2024 | Non-commercial, © EuroGeographics |
-| `europe.geo.json` | 59 | Countries of Europe and its margins (NUTS 0) | ISO 3166-1 alpha-2 (`DE`), alpha-3 (`DEU`), and the Eurostat code where it differs (`EL`, `UK`) | Natural Earth, 1:50m | Public domain |
-| `world.geo.json` | 177 | Countries of the world | ISO 3166-1 alpha-2, alpha-3, and the Eurostat code where it differs | Natural Earth, 1:50m | Public domain |
+| `europe.geo.json` | 68 | Countries and separately coded territories inside the European frame | ISO 3166-1 alpha-2 (`DE`), alpha-3 (`DEU`), and the Eurostat code where it differs (`EL`, `UK`) | Natural Earth Map Units 5.1.1, 1:50m | Public domain |
+| `world.geo.json` | 247 | Countries and separately coded territories of the world | ISO 3166-1 alpha-2, alpha-3, and the Eurostat code where it differs | Natural Earth Map Units 5.1.1, 1:50m | Public domain |
 
 The shapes carry no population, area, postal code or cadastral code.
 They are simplified for drawing at screen resolution and are not
@@ -92,7 +92,8 @@ numeric observations:
 | Where | What it holds | What it is for |
 | --- | --- | --- |
 | **This repository** | the shapes, each with its ISTAT, NUTS and ISO identifiers | drawing a table of numbers on a map |
-| [**Gramscii-IT/open-data-catalogue**](https://huggingface.co/datasets/Gramscii-IT/open-data-catalogue) on Hugging Face | discovery metadata from statistical and Italian public-finance providers; release counts and coverage belong to the snapshot manifest and quality report | finding datasets and inspecting their recorded dimensions, codes and documentation |
+| [**Gramscii-IT/european-open-data-catalogue**](https://huggingface.co/datasets/Gramscii-IT/european-open-data-catalogue) on Hugging Face | discovery metadata from statistical and Italian public-finance providers; release counts and coverage belong to the snapshot manifest and quality report | finding datasets and inspecting their recorded dimensions, codes and documentation |
+| [**Gramscii-IT/european-territory-boundaries**](https://huggingface.co/datasets/Gramscii-IT/european-territory-boundaries) on Hugging Face | the same versioned geometry assets and machine-readable boundary-set manifest | downloading map boundaries independently of SDG |
 | [**Gramscii-Git/open-data-catalogue**](https://github.com/Gramscii-Git/open-data-catalogue) on GitHub | catalogue release policy, validation and publication code | validating an export from the SDG harvester and publishing a verified immutable revision |
 
 A dataset in the catalogue is cut by a territorial dimension whose codes
@@ -109,9 +110,9 @@ coverage of every dataset or territorial vintage.
 This repository contains geometry, not a list of available observations.
 A shape does not prove that a provider has data for a particular date,
 territory or filter. The shared joint-availability artifact belongs in
-`open-data-catalogue`; its publisher documentation states which stages
-are implemented. Do not infer that an index has been published from the
-presence of these boundary files.
+`european-open-data-catalogue`; its publisher documentation states which
+stages are implemented. Do not infer that an index has been published from
+the presence of these boundary files.
 
 Before drawing observations:
 
@@ -221,19 +222,34 @@ EPSG:3035, file `NUTS_RG_03M_2024_3035.geojson` (SHA-256
 
 ### Europe and the world
 
-Source: Natural Earth, *Admin 0 – Countries*, 1:50m scale.
+Source: Natural Earth, *Admin 0 – Map Units*, version 5.1.1 at 1:50m
+scale. Map Units preserves separately coded territories that statistical
+providers can expose independently.
 
-1. The country polygons are projected: Lambert azimuthal equal-area for
-   `europe.geo.json`, which keeps the European polygons only, and
-   Robinson for `world.geo.json`.
+1. The map-unit polygons are projected to EPSG:3035 for
+   `europe.geo.json`, using the same fixed frame as the NUTS files, and
+   to Robinson for `world.geo.json`.
 2. Each polygon is simplified for screen resolution and written as an
    SVG path in a 1,000-unit-wide view box.
 3. ISO 3166-1 alpha-2 and alpha-3 codes are attached, plus the Eurostat
    country code where it differs from ISO (`EL` for Greece, `UK` for the
    United Kingdom), so Eurostat tables colour the map directly.
 
-The Natural Earth release archive these two files were made from is not
-pinned by checksum. Regenerating them means recording that input first.
+[`natural-earth.build.json`](natural-earth.build.json) pins the source URL,
+version, SHA-256, source identity fields, explicit aliases, projections,
+frames and simplification tolerances. The input archive is
+`ne_50m_admin_0_map_units.zip`, SHA-256
+`f449ec126985e5aab30aea4b439c2d9eb0c5d40bd722fc1036ad3b6477e25cdd`.
+To reproduce the two files, save that archive locally and run:
+
+```sh
+uv sync --locked --group build
+.venv/bin/python scripts/natural_earth.py --spec natural-earth.build.json \
+  --archive ne_50m_admin_0_map_units.zip --output build/natural-earth
+```
+
+The generator verifies the archive before reading it and rejects missing,
+invalid or ambiguous identities. It never downloads or substitutes a source.
 
 ## Integrity
 
@@ -253,8 +269,8 @@ repository, not the upstream archives.
 | `europe-nuts1.geo.json` | `25ced35220f9d1dc5ef3573f6e9989b6de7859472d311fbac9b5e7bfa2a90539` |
 | `europe-nuts2.geo.json` | `6cf445662590b8ca7c17ff3394c1d7f3ae3febb32fa28eea6cedec236fc45eac` |
 | `europe-nuts3.geo.json` | `6f0c585c165fc4aa01651f51c3c20e1d86de1a042df240f81f9c6ff2226675da` |
-| `europe.geo.json` | `a4f787145ac330c17426ec734d3784d0d13665e2fdf98ab76fc8b976572492d3` |
-| `world.geo.json` | `13d478295fa33bb49531878f637188559b570c3b673df6f8b1b458e7f444af62` |
+| `europe.geo.json` | `70cd83aa4832c9d195108cc4e2990f128052e24acb4967cb7c6691b695401d09` |
+| `world.geo.json` | `68b225b731701c87d9b6a1db334760ed89de092f1b8b87649bedb51ae8046132` |
 
 ```sh
 shasum -a 256 -c SHA256SUMS
@@ -307,6 +323,12 @@ When you use a file, credit the file's source, as written in its
 > Boundaries by Gramscii, CC BY 4.0, https://github.com/Gramscii-Git/boundaries
 
 ## Origin
+
+[`boundary-sets.json`](boundary-sets.json) is the machine-readable contract for
+territorial level, classification, vintage, identifier families, source terms,
+commercial-use status, shape count and artifact digest. A catalogue provider is
+bound to one of these sets only after its exact territorial codelist and vintage
+are qualified; a provider-wide wildcard is not evidence of compatibility.
 
 These files are the map layer of Semantic Deterministic Graph,
 Gramscii's deterministic answer engine, and are published here on their

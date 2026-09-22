@@ -5,4 +5,8 @@ requires-python = ">=3.13"
 dependencies = []
 
 [dependency-groups]
-build = ["pyshp==3.1.6", "shapely==2.1.2"]
+build = [
+    "pyproj>=3.8.0",
+    "pyshp==3.1.6",
+    "shapely==2.1.2",
+]

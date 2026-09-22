@@ -17,6 +17,32 @@ class DistributionTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), digest, name)
         self.assertEqual(set(digests), {path.name for path in root.glob("*.geo.json")})
 
+    def test_boundary_set_manifest_matches_every_distributed_file(self):
+        root = Path(__file__).parents[1]
+        manifest = json.loads((root / "boundary-sets.json").read_bytes())
+        self.assertEqual(manifest["schema_version"], 1)
+        self.assertEqual(manifest["dataset_id"], "Gramscii-IT/european-territory-boundaries")
+        licenses = manifest["licenses"]
+        assets = manifest["boundary_sets"]
+        self.assertEqual(len({item["id"] for item in assets}), len(assets))
+        self.assertEqual(
+            {item["file"] for item in assets},
+            {path.name for path in root.glob("*.geo.json")},
+        )
+        for item in assets:
+            with self.subTest(file=item["file"]):
+                body = json.loads((root / item["file"]).read_bytes())
+                self.assertIn(item["license"], licenses)
+                self.assertIsInstance(licenses[item["license"]]["commercial_use"], bool)
+                self.assertEqual(item["shapes"], len(body["shapes"]))
+                self.assertEqual(
+                    item["sha256"],
+                    hashlib.sha256((root / item["file"]).read_bytes()).hexdigest(),
+                )
+                self.assertTrue(item["classification"])
+                self.assertTrue(item["vintage"])
+                self.assertTrue(item["identifiers"])
+
     def test_historical_files_match_their_declared_inventory_and_geometry_dates(self):
         root = Path(__file__).parents[1]
         spec = json.loads((root / "municipalities.build.json").read_bytes())

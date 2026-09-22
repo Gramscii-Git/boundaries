@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "source": {
+    "name": "Natural Earth Admin 0 - Map Units",
+    "version": "5.1.1",
+    "scale": "1:50m",
+    "url": "https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_0_map_units.zip",
+    "sha256": "f449ec126985e5aab30aea4b439c2d9eb0c5d40bd722fc1036ad3b6477e25cdd",
+    "member_base": "ne_50m_admin_0_map_units",
+    "license": "public-domain"
+  },
+  "identity": {
+    "record_id_field": "GU_A3",
+    "name_field": "NAME_EN",
+    "group_name_field": "ADMIN",
+    "alpha2_field": "ISO_A2_EH",
+    "alpha3_field": "ISO_A3_EH",
+    "missing_code": "-99",
+    "aliases": {
+      "GR": ["EL"],
+      "GB": ["UK"],
+      "XK": ["XKV", "KOS"]
+    },
+    "group_names": {
+      "AU": "Australia"
+    },
+    "overrides": {
+      "KOS": {
+        "alpha2": "XK",
+        "alpha3": "XKX"
+      }
+    }
+  },
+  "outputs": [
+    {
+      "file": "world.geo.json",
+      "projection": "ESRI:54030",
+      "frame": null,
+      "canvas_width": 1000.0,
+      "simplification_tolerance": 10000.0
+    },
+    {
+      "file": "europe.geo.json",
+      "projection": "EPSG:3035",
+      "frame": [2600000.0, 1350000.0, 7350000.0, 5500000.0],
+      "canvas_width": 1000.0,
+      "simplification_tolerance": 1500.0
+    }
+  ]
+}

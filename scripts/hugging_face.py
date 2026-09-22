@@ -1,0 +1,104 @@
+"""Build the Hugging Face boundary dataset from verified distribution assets."""
+
+from __future__ import annotations
+
+import argparse
+import gzip
+import hashlib
+import json
+import shutil
+from pathlib import Path
+
+DOCUMENTS = (
+    "LICENSE",
+    "NATURAL-EARTH.md",
+    "GISCO-NUTS.md",
+    "SHA256SUMS",
+    "boundary-sets.json",
+    "natural-earth.build.json",
+)
+
+
+def _digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _row(asset: dict, license_: dict, body: dict, shape: dict) -> dict:
+    return {
+        "boundary_set_id": asset["id"],
+        "source_file": asset["file"],
+        "scope": asset["scope"],
+        "level": asset["level"],
+        "classification": asset["classification"],
+        "vintage": asset["vintage"],
+        "identifiers": asset["identifiers"],
+        "license_id": asset["license"],
+        "commercial_use": license_["commercial_use"],
+        "view_box": body["viewBox"],
+        "source": body["source"],
+        "source_archive_sha256": body.get("source_archive_sha256"),
+        "reference_date": body.get("reference_date"),
+        "outside_codes": body.get("outside", []),
+        "name": shape["name"],
+        "aliases": shape["aliases"],
+        "svg_path": shape["d"],
+        "boundary_date": shape.get("boundary_date"),
+    }
+
+
+def build(root: Path, output: Path) -> dict:
+    manifest = json.loads((root / "boundary-sets.json").read_bytes())
+    output.mkdir(parents=True, exist_ok=True)
+    data = output / "data"
+    data.mkdir(exist_ok=True)
+    shutil.copy2(root / "HUGGING_FACE_README.md", output / "README.md")
+    for name in DOCUMENTS:
+        shutil.copy2(root / name, output / name)
+
+    grouped: dict[str, list[dict]] = {"open": [], "gisco-nuts-non-commercial": []}
+    for asset in manifest["boundary_sets"]:
+        source = root / asset["file"]
+        if _digest(source) != asset["sha256"]:
+            raise ValueError(f"boundary asset checksum differs: {asset['file']}")
+        body = json.loads(source.read_bytes())
+        if len(body["shapes"]) != asset["shapes"]:
+            raise ValueError(f"boundary asset shape count differs: {asset['file']}")
+        license_ = manifest["licenses"][asset["license"]]
+        group = "open" if license_["commercial_use"] else "gisco-nuts-non-commercial"
+        grouped[group].extend(_row(asset, license_, body, shape) for shape in body["shapes"])
+        shutil.copy2(source, output / asset["file"])
+
+    release = {"schema_version": 1, "dataset_id": manifest["dataset_id"], "data_files": {}}
+    for group, rows in grouped.items():
+        target = data / f"{group}.jsonl.gz"
+        with (
+            target.open("wb") as raw,
+            gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as compressed,
+        ):
+            for row in rows:
+                compressed.write(
+                    (json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n").encode()
+                )
+        release["data_files"][group] = {
+            "file": str(target.relative_to(output)),
+            "rows": len(rows),
+            "sha256": _digest(target),
+        }
+    (output / "publication.json").write_text(
+        json.dumps(release, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return release
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=Path(__file__).parents[1])
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    release = build(args.root, args.output)
+    print(json.dumps(release, indent=2))
+
+
+if __name__ == "__main__":
+    main()
